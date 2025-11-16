@@ -25,6 +25,8 @@ const  Scanner= () => {
               {
                 text: `I clicked photo of medicine backside. Please analyze this image and provide details about the medicine and answer all question asked in the following format with the help of the name of medicine:
 - ✅ Name of the medicine:
+- 📝 Manufacturing date :
+- 📝 Expiry date :
 - 💊 Uses and purpose:
 - ✏️ Dosage guidelines:
 - ⚠️ Warnings (allergies, interactions, pregnancy safety):
