@@ -47,7 +47,7 @@ const QrScanner = () => {
 
   let request = () => {
 
-    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyBbWaPGUd05-ihuxu7wVhh-hnTGm2y-aro';
+    const url = import.meta.env.VITE_API_GEMINI_VIDEO;
      
     const requestBody = {
       contents: [
