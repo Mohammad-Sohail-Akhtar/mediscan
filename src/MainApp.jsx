@@ -1,9 +1,9 @@
-// src/MainApp.jsx
 import React, { useState } from 'react';
 import Scanner from './Scanner';
+// import Reminder from './Reminder';
+import AuthPages from './AuthPages';
 import './App.css';
 import { FaUser, FaCamera, FaBell } from 'react-icons/fa';
-import AuthPages from './AuthPages';
 
 const MainApp = () => {
   const [activeTab, setActiveTab] = useState('scanner');
@@ -11,12 +11,11 @@ const MainApp = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'user':
-        // return <div className="tab-content"><h2>👤 User Login</h2><p>Login functionality coming soon.</p></div>;
-        return <AuthPages/>
+        return <AuthPages />;  // Login / Signup handled here
       case 'scanner':
         return <Scanner />;
       case 'reminder':
-        return <div className="tab-content"><h2>⏰ Medicine Reminder</h2><p>Set reminders for your medicines here.</p></div>;
+        return <Reminder />;
       default:
         return null;
     }
@@ -25,6 +24,7 @@ const MainApp = () => {
   return (
     <div className="main-app">
       <div className="content-area">{renderContent()}</div>
+
       <nav className="bottom-nav">
         <button onClick={() => setActiveTab('user')} className={activeTab === 'user' ? 'active' : ''}>
           <FaUser /><span>User</span>
