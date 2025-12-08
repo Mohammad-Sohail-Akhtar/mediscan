@@ -1,0 +1,164 @@
+/* PAGE CONTAINER */
+.reminder-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+  background: #f3f4f6;
+  min-height: 100vh;
+  border-radius: 15px;
+}
+
+.reminder-title {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* BUTTONS */
+.btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-success {
+  background: #16a34a;
+  color: white;
+}
+
+.btn-danger {
+  background: #dc2626;
+  color: white;
+}
+
+.btn-dark {
+  background: #374151;
+  color: white;
+}
+
+.btn.small {
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+
+.modal-box {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  border: 1px solid #ddd;
+  max-height: 90vh;
+overflow-y: auto;
+margin-top: -68px;
+}
+
+.modal-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+/* INPUTS */
+.input-box {
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
+  width: 100%;
+}
+
+.input-box:focus {
+  outline: 2px solid #3b82f6;
+}
+
+.form-grid {
+  display: grid;
+  gap: 12px;
+}
+
+/* IMAGE PREVIEW */
+.preview-img {
+  width: 250px;
+  height: 250px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-top: 5px;
+}
+
+/* MODAL ACTIONS */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* RECORD LIST */
+.record-list {
+  margin-top: 20px;
+  display: grid;
+  gap: 15px;
+}
+
+.record-card {
+  background: white;
+  padding: 15px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.record-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.record-sub {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* ACTION BUTTONS */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .record-card {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .action-buttons {
+    justify-content: center;
+  }
+
+  .modal-box {
+    max-width: 95%;
+  }
+}

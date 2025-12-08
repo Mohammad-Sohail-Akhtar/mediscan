@@ -1,6 +1,6 @@
 .landing-container {
   height: 100vh;
-  background: url('./assets/capsule.jpg') center center no-repeat;
+  background: url('./images/main.jpeg') center center no-repeat;
   background-size: cover;
   display: flex;
   justify-content: center;
@@ -31,9 +31,10 @@
 
 .landing-content button {
   font-size: 1.2rem;
+  font-weight: bold;
   padding: 0.8rem 2rem;
   background-color: white;
-  color: #00c9a7;
+  color: #135c50;
   border: none;
   border-radius: 8px;
  cursor: pointer;
@@ -42,4 +43,5 @@
 
 .landing-content button:hover {
   background-color: #f0f0f0;
+  color: black;
 }
