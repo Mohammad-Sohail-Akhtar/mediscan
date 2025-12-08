@@ -1,0 +1,76 @@
+.main-app {
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 60px;
+  background: linear-gradient(180deg, #66BEEB, #4CAEFE);
+  height: 100vh;
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: 0.3s;
+  padding-top: 20px;
+}
+
+.sidebar.open {
+  width: 200px;
+}
+
+/* Toggle button */
+.toggle-btn {
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 10px 15px;
+}
+
+/* Menu buttons */
+.sidebar-menu button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.sidebar-menu button.active {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+}
+
+.sidebar-menu button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Page content shifts when sidebar opens */
+.content-area {
+  margin-left: 60px;
+  padding: 20px;
+  transition: 0.3s;
+  width: 100%;
+}
+
+.content-area.shift {
+  margin-left: 200px;
+}
+
+
+/* Hide button text when sidebar is closed */
+.sidebar:not(.open) .sidebar-menu span {
+  display: none;
+}
+
+/* Center icons when closed */
+.sidebar:not(.open) .sidebar-menu button {
+  justify-content: center;
+}

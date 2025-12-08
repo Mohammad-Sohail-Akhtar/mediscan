@@ -283,10 +283,10 @@ Format the output exactly as above using the same symbols.
     return (
         <div style={wrapper}>
             <div id="qr-reader" ref={qrRef}></div>
-
+{/* 
             <button style={button} onClick={scanQr}>
                 Scan
-            </button>
+            </button> */}
 
             {/* Show scanned QR result */}
             {medicine && (

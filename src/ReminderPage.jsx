@@ -1,257 +1,6 @@
-// import React, { useState, useEffect } from "react";
-// import "./ReminderPage.css";
-
-// export default function ReminderPage() {
-//   const [showForm, setShowForm] = useState(false);
-//   const [mode, setMode] = useState("create"); // create | edit | view
-//   const [records, setRecords] = useState([]);
-//   const [currentId, setCurrentId] = useState(null);
-
-//   const emptyForm = {
-//     name: "",
-//     expiry: "",
-//     mfg: "",
-//     dose: "",
-//     times: [],
-//     imageUrl: ""   // store base64 here
-//   };
-
-//   const [form, setForm] = useState(emptyForm);
-
-//   useEffect(() => {
-//     const saved = JSON.parse(localStorage.getItem("medireminder") || "[]");
-//     setRecords(saved);
-//   }, []);
-
-//   const saveToLocal = (data) => {
-//     localStorage.setItem("medireminder", JSON.stringify(data));
-//   };
-
-//   const handleOpenCreate = () => {
-//     setMode("create");
-//     setForm(emptyForm);
-//     setShowForm(true);
-//   };
-
-//   const handleSave = () => {
-//     let updated;
-//     if (mode === "edit") {
-//       updated = records.map((r) =>
-//         r.id === currentId ? { ...form, id: r.id } : r
-//       );
-//     } else {
-//       updated = [...records, { ...form, id: Date.now() }];
-//     }
-
-//     setRecords(updated);
-//     saveToLocal(updated);
-//     setShowForm(false);
-//   };
-
-//   const handleEdit = (id) => {
-//     const rec = records.find((r) => r.id === id);
-//     setForm(rec);
-//     setCurrentId(id);
-//     setMode("edit");
-//     setShowForm(true);
-//   };
-
-//   const handleView = (id) => {
-//     const rec = records.find((r) => r.id === id);
-//     setForm(rec);
-//     setMode("view");
-//     setShowForm(true);
-//   };
-
-//   const handleDelete = (id) => {
-//     const updated = records.filter((r) => r.id !== id);
-//     setRecords(updated);
-//     saveToLocal(updated);
-//   };
-
-//   const handleChange = (field, value) => {
-//     setForm({ ...form, [field]: value });
-//   };
-
-//   const handleDoseChange = (value) => {
-//     const doseNum = Number(value);
-//     const newTimes = Array(doseNum).fill("");
-
-//     setForm({
-//       ...form,
-//       dose: doseNum,
-//       times: newTimes,
-//     });
-//   };
-
-//   const handleTimeChange = (index, value) => {
-//     const updatedTimes = [...form.times];
-//     updatedTimes[index] = value;
-//     setForm({ ...form, times: updatedTimes });
-//   };
-
-//   // 🔥 UPDATED — Convert image to Base64 before saving
-//   const handleImage = (e) => {
-//     const file = e.target.files[0];
-//     if (file) {
-//       const reader = new FileReader();
-//       reader.onloadend = () => {
-//         setForm({
-//           ...form,
-//           imageUrl: reader.result, // Base64 string saved here
-//         });
-//       };
-//       reader.readAsDataURL(file);
-//     }
-//   };
-
-//   const doseTimes = ["7:00 AM", "12:00 PM", "4:00 PM", "8:00 PM"];
-
-//   return (
-//     <div className="reminder-container">
-//       <h1 className="reminder-title">Medicine Reminder</h1>
-
-//       <button onClick={handleOpenCreate} className="btn btn-primary">
-//         Create
-//       </button>
-
-//       {showForm && (
-//         <div className="modal-overlay">
-//           <div className="modal-box">
-//             <h2 className="modal-title">{mode} Medicine</h2>
-
-//             <div className="form-grid">
-//               <input
-//                 type="text"
-//                 placeholder="Medicine Name"
-//                 disabled={mode === "view"}
-//                 value={form.name}
-//                 onChange={(e) => handleChange("name", e.target.value)}
-//                 className="input-box"
-//               />
-
-//               <label>Expiry Date</label>
-//               <input
-//                 type="date"
-//                 disabled={mode === "view"}
-//                 value={form.expiry}
-//                 onChange={(e) => handleChange("expiry", e.target.value)}
-//                 className="input-box"
-//               />
-
-//               <label>MFG Date</label>
-//               <input
-//                 type="date"
-//                 disabled={mode === "view"}
-//                 value={form.mfg}
-//                 onChange={(e) => handleChange("mfg", e.target.value)}
-//                 className="input-box"
-//               />
-
-//               <label>Dose</label>
-//               <select
-//                 disabled={mode === "view"}
-//                 value={form.dose}
-//                 onChange={(e) => handleDoseChange(e.target.value)}
-//                 className="input-box"
-//               >
-//                 <option value="">Select Dose</option>
-//                 <option value="1">One Time</option>
-//                 <option value="2">Two Times</option>
-//                 <option value="3">Three Times</option>
-//                 <option value="4">Four Times</option>
-//               </select>
-
-//               {form.dose > 0 && (
-//                 <div>
-//                   <label>Select Time(s)</label>
-//                   {form.times.map((value, index) => (
-//                     <select
-//                       key={index}
-//                       disabled={mode === "view"}
-//                       value={value}
-//                       onChange={(e) => handleTimeChange(index, e.target.value)}
-//                       className="input-box"
-//                       style={{ marginTop: "8px" }}
-//                     >
-//                       <option value="">Select Time</option>
-//                       {doseTimes.map((t) => (
-//                         <option key={t} value={t}>
-//                           {t}
-//                         </option>
-//                       ))}
-//                     </select>
-//                   ))}
-//                 </div>
-//               )}
-
-//               <label>Upload Image</label>
-//               {mode !== "view" && (
-//                 <input
-//                   type="file"
-//                   accept="image/*"
-//                   onChange={handleImage}
-//                   className="input-box"
-//                 />
-//               )}
-
-//               {form.imageUrl && (
-//                 <img
-//                   src={form.imageUrl}
-//                   alt="Medicine"
-//                   className="preview-img"
-//                 />
-//               )}
-//             </div>
-
-//             <div className="modal-actions">
-//               <button onClick={() => setShowForm(false)} className="btn">
-//                 Close
-//               </button>
-//               {mode !== "view" && (
-//                 <button onClick={handleSave} className="btn btn-success">
-//                   Save
-//                 </button>
-//               )}
-//             </div>
-//           </div>
-//         </div>
-//       )}
-
-//       <div className="record-list">
-//         {records.map((r) => (
-//           <div key={r.id} className="record-card">
-//             <div>
-//               <p className="record-name">{r.name}</p>
-//               <p className="record-sub">Dose: {r.dose} time(s)</p>
-//               <p className="record-sub">Times: {r.times?.join(", ")}</p>
-//             </div>
-
-//             <div className="action-buttons">
-//               <button onClick={() => handleView(r.id)} className="btn small btn-dark">
-//                 View
-//               </button>
-//               <button onClick={() => handleEdit(r.id)} className="btn small btn-primary">
-//                 Edit
-//               </button>
-//               <button onClick={() => handleDelete(r.id)} className="btn small btn-danger">
-//                 Delete
-//               </button>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "./ReminderPage.css";
-import { auth, db } from "./Firebase"; // Firebase Auth + Firestore
+import { auth, db } from "./Firebase"; // keep your existing firebase exports
 import { doc, getDoc } from "firebase/firestore";
 
 export default function ReminderPage() {
@@ -259,8 +8,7 @@ export default function ReminderPage() {
   const [mode, setMode] = useState("create"); // create | edit | view
   const [records, setRecords] = useState([]);
   const [currentId, setCurrentId] = useState(null);
-  // const [userName, setUserName] = useState(null); // store logged-in user's name
-  const [loading, setLoading] = useState(true); // loading state
+  const [loading, setLoading] = useState(true);
 
   const emptyForm = {
     name: "",
@@ -268,12 +16,11 @@ export default function ReminderPage() {
     mfg: "",
     dose: "",
     times: [],
-    imageUrl: "" // store base64 here
+    imageUrl: ""
   };
-
   const [form, setForm] = useState(emptyForm);
 
-  // Load user info and reminders
+  // Load user reminders + optional username
   useEffect(() => {
     const fetchData = async () => {
       const user = auth.currentUser;
@@ -281,18 +28,14 @@ export default function ReminderPage() {
         setLoading(false);
         return;
       }
-
       const userId = user.uid;
-
-      // Load user's reminders from localStorage
       const saved = JSON.parse(localStorage.getItem(`medireminder_${userId}`) || "[]");
       setRecords(saved);
 
-      // Load user's name from Firestore
       try {
         const userDoc = await getDoc(doc(db, "users", userId));
         if (userDoc.exists()) {
-          // setUserName(userDoc.data().name || "");
+          // optional: use userDoc.data().name
         }
       } catch (err) {
         console.error("Failed to fetch user name:", err);
@@ -300,7 +43,6 @@ export default function ReminderPage() {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
@@ -322,9 +64,7 @@ export default function ReminderPage() {
 
     let updated;
     if (mode === "edit") {
-      updated = records.map((r) =>
-        r.id === currentId ? { ...form, id: r.id } : r
-      );
+      updated = records.map((r) => (r.id === currentId ? { ...form, id: r.id } : r));
     } else {
       updated = [...records, { ...form, id: Date.now() }];
     }
@@ -336,7 +76,7 @@ export default function ReminderPage() {
 
   const handleEdit = (id) => {
     const rec = records.find((r) => r.id === id);
-    setForm(rec);
+    setForm(rec || emptyForm);
     setCurrentId(id);
     setMode("edit");
     setShowForm(true);
@@ -344,7 +84,7 @@ export default function ReminderPage() {
 
   const handleView = (id) => {
     const rec = records.find((r) => r.id === id);
-    setForm(rec);
+    setForm(rec || emptyForm);
     setMode("view");
     setShowForm(true);
   };
@@ -359,213 +99,268 @@ export default function ReminderPage() {
     setForm({ ...form, [field]: value });
   };
 
+  // Auto-generate times based on dose count
+  const generateTimes = (doseNum) => {
+    const n = Number(doseNum) || 0;
+    if (n <= 0) return [];
+
+    // We distribute times between startHour (7:00) and endHour (22:00) inclusive.
+    const startHour = 7; // 7 AM
+    const endHour = 22; // 10 PM
+
+    if (n === 1) {
+      return ["8:00 AM"];
+    }
+
+    const times = [];
+    const interval = (endHour - startHour) / (n - 1);
+
+    for (let i = 0; i < n; i++) {
+      const hourFloat = startHour + interval * i;
+      const hourRounded = Math.round(hourFloat); // round to nearest hour
+      const h24 = ((hourRounded % 24) + 24) % 24;
+      const suffix = h24 >= 12 ? "PM" : "AM";
+      const h12 = h24 % 12 === 0 ? 12 : h24 % 12;
+      const formatted = `${h12}:00 ${suffix}`;
+      times.push(formatted);
+    }
+    return times;
+  };
+
+  // When dose changes in modal, auto-set times
   const handleDoseChange = (value) => {
     const doseNum = Number(value);
-    const newTimes = Array(doseNum).fill("");
-
-    setForm({
-      ...form,
-      dose: doseNum,
-      times: newTimes,
-    });
+    const times = generateTimes(doseNum);
+    setForm({ ...form, dose: doseNum, times });
   };
 
-  const handleTimeChange = (index, value) => {
-    const updatedTimes = [...form.times];
-    updatedTimes[index] = value;
-    setForm({ ...form, times: updatedTimes });
-  };
-
+  // allow image in modal (kept as before)
   const handleImage = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setForm({
-          ...form,
-          imageUrl: reader.result, // Base64 string
-        });
-      };
-      reader.readAsDataURL(file);
-    }
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setForm({ ...form, imageUrl: reader.result });
+    };
+    reader.readAsDataURL(file);
   };
 
-  const doseTimes = ["7:00 AM", "12:00 PM", "4:00 PM", "8:00 PM"];
+  // computed nextDose
+  const nextDose = useMemo(() => {
+    if (!records.length) return null;
+    for (const r of records) {
+      if (r.times && r.times.length > 0 && r.times.some(t => t)) {
+        const t = r.times.find(t => t) || r.times[0];
+        return { name: r.name, time: t };
+      }
+    }
+    const first = records[0];
+    return { name: first.name, time: (first.times && first.times[0]) || "—" };
+  }, [records]);
 
-  // If loading, show placeholder
   if (loading) {
     return (
-      <div className="reminder-container">
-        <h1 className="reminder-title">Loading...</h1>
+      <div className="reminder-wrap">
+        <div className="center-loader">Loading reminders…</div>
       </div>
     );
   }
 
-  // If user not logged in
   if (!auth.currentUser) {
     return (
-      <div className="reminder-container">
-        <h1 className="reminder-title">Please log in to see your reminders</h1>
+      <div className="reminder-wrap">
+        <div className="auth-please">
+          <h2>Please log in to see your medicine reminders</h2>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="reminder-container">
-      {/* Title + user name */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "20px"
-        }}
-      >
-        <h1 className="reminder-title">Medicine Reminder</h1>
-        <h3 style={{ margin: 0 }}>
-          {/* {userName ? `Hello, ${userName}` : "Hello"} */}
-        </h3>
+    <div className="reminder-wrap">
+      {/* HERO TOP */}
+      <div className="hero-card">
+        <div className="hero-left">
+          <div className="brand-row">
+            <div className="logo">🩺</div>
+            <div className="brand-texts">
+              <div className="brand-title">MedCare</div>
+              <div className="brand-sub">Simple Healthcare Assistant</div>
+            </div>
+          </div>
+
+          <h1 className="hero-heading">Medicine Reminder</h1>
+          <p className="hero-p">
+            Keep track of your medicines and never miss a dose.
+          </p>
+
+          <div className="hero-actions">
+            <button className="btn btn-primary" onClick={handleOpenCreate}>
+              + Add Reminder
+            </button>
+            {/* Upload removed as requested */}
+          </div>
+        </div>
+
+        <div className="hero-right">
+          <div className="next-dose">
+            <div className="next-label">Next Dose</div>
+            <div className="next-time">{nextDose ? nextDose.time : "No reminders"}</div>
+            <div className="next-med">{nextDose ? nextDose.name : "No medicine scheduled"}</div>
+            <div className="pill-emoji">💊</div>
+            <button
+              className="btn remind-btn"
+              onClick={() => alert("Reminder snoozed — integrate with Notification API if needed")}
+            >
+              Remind Me
+            </button>
+          </div>
+        </div>
       </div>
 
-      <button onClick={handleOpenCreate} className="btn btn-primary">
-        Create
-      </button>
-
-      {showForm && (
-        <div className="modal-overlay">
-          <div className="modal-box">
-            <h2 className="modal-title">{mode} Medicine</h2>
-
-            <div className="form-grid">
-              <input
-                type="text"
-                placeholder="Medicine Name"
-                disabled={mode === "view"}
-                value={form.name}
-                onChange={(e) => handleChange("name", e.target.value)}
-                className="input-box"
-              />
-
-              <label>Expiry Date</label>
-              <input
-                type="date"
-                disabled={mode === "view"}
-                value={form.expiry}
-                onChange={(e) => handleChange("expiry", e.target.value)}
-                className="input-box"
-              />
-
-              <label>MFG Date</label>
-              <input
-                type="date"
-                disabled={mode === "view"}
-                value={form.mfg}
-                onChange={(e) => handleChange("mfg", e.target.value)}
-                className="input-box"
-              />
-
-              <label>Dose</label>
-              <select
-                disabled={mode === "view"}
-                value={form.dose}
-                onChange={(e) => handleDoseChange(e.target.value)}
-                className="input-box"
-              >
-                <option value="">Select Dose</option>
-                <option value="1">One Time</option>
-                <option value="2">Two Times</option>
-                <option value="3">Three Times</option>
-                <option value="4">Four Times</option>
-              </select>
-
-              {form.dose > 0 && (
-                <div>
-                  <label>Select Time(s)</label>
-                  {form.times.map((value, index) => (
-                    <select
-                      key={index}
-                      disabled={mode === "view"}
-                      value={value}
-                      onChange={(e) => handleTimeChange(index, e.target.value)}
-                      className="input-box"
-                      style={{ marginTop: "8px" }}
-                    >
-                      <option value="">Select Time</option>
-                      {doseTimes.map((t) => (
-                        <option key={t} value={t}>
-                          {t}
-                        </option>
-                      ))}
-                    </select>
-                  ))}
-                </div>
-              )}
-
-              <label>Upload Image</label>
-              {mode !== "view" && (
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImage}
-                  className="input-box"
-                />
-              )}
-
-              {form.imageUrl && (
-                <img
-                  src={form.imageUrl}
-                  alt="Medicine"
-                  className="preview-img"
-                />
-              )}
+      {/* MAIN GRID */}
+      <div className="main-grid">
+        {/* Left column: list */}
+        <div className="left-col">
+          <div className="card-list">
+            <div className="list-header">
+              <h3>Your Reminders</h3>
+              <p className="muted">Manage medicine times, expiry and details</p>
             </div>
 
-            <div className="modal-actions">
-              <button onClick={() => setShowForm(false)} className="btn">
-                Close
-              </button>
-              {mode !== "view" && (
-                <button onClick={handleSave} className="btn btn-success">
-                  Save
+            {records.length === 0 ? (
+              <div className="empty-state">
+                <p>No reminders yet</p>
+                <button className="btn btn-ghost" onClick={handleOpenCreate}>
+                  Create first reminder
                 </button>
-              )}
+              </div>
+            ) : (
+              records.map((r) => (
+                <div key={r.id} className="reminder-card">
+                  <div className="reminder-left">
+                    <div className="pill-icon">💊</div>
+                    <div className="reminder-meta">
+                      <div className="rem-name">{r.name || "Unnamed"}</div>
+                      <div className="rem-sub">
+                        Dose: {r.dose || 0} · {r.times?.filter(Boolean)?.join(", ") || "Times not set"}
+                      </div>
+                      <div className="rem-expiry">Expiry: {r.expiry || "—"}</div>
+                    </div>
+                  </div>
+
+                  <div className="reminder-actions">
+                    <button className="small-btn" onClick={() => handleView(r.id)}>View</button>
+                    <button className="small-btn primary" onClick={() => handleEdit(r.id)}>Edit</button>
+                    <button className="small-btn danger" onClick={() => handleDelete(r.id)}>Delete</button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Right column: info cards */}
+        <div className="right-col">
+          <div className="info-card big">
+            <h4>Medicine Reminders</h4>
+            <p className="muted">Create reminders with automatic evenly spread times.</p>
+            <div className="info-cta">
+              <button className="btn small">Manage Reminders</button>
+            </div>
+          </div>
+
+          <div className="info-card">
+            <h4>Notes</h4>
+            <p className="muted">Times are auto-generated based on dose count (1–4). You can edit dose to change times.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal: create/edit/view */}
+      {showForm && (
+        <div className="modal-overlay">
+          <div className="modal-card">
+            <div className="modal-head">
+              <h3>{mode === "create" ? "Create Reminder" : mode === "edit" ? "Edit Reminder" : "View Reminder"}</h3>
+              <button className="close-x" onClick={() => setShowForm(false)}>✕</button>
+            </div>
+
+            <div className="modal-body">
+              <div className="form-grid">
+                <input
+                  type="text"
+                  className="input"
+                  placeholder="Medicine Name"
+                  value={form.name}
+                  disabled={mode === "view"}
+                  onChange={(e) => handleChange("name", e.target.value)}
+                />
+
+                <label className="label">Expiry Date</label>
+                <input
+                  type="date"
+                  className="input"
+                  value={form.expiry}
+                  disabled={mode === "view"}
+                  onChange={(e) => handleChange("expiry", e.target.value)}
+                />
+
+                <label className="label">MFG Date</label>
+                <input
+                  type="date"
+                  className="input"
+                  value={form.mfg}
+                  disabled={mode === "view"}
+                  onChange={(e) => handleChange("mfg", e.target.value)}
+                />
+
+                <label className="label">Dose</label>
+                <select
+                  className="input"
+                  value={form.dose}
+                  disabled={mode === "view"}
+                  onChange={(e) => handleDoseChange(e.target.value)}
+                >
+                  <option value="">Select Dose</option>
+                  <option value="1">One Time</option>
+                  <option value="2">Two Times</option>
+                  <option value="3">Three Times</option>
+                  <option value="4">Four Times</option>
+                </select>
+
+                {/* Show auto-generated times (read-only). No time-selects now */}
+                {form.dose > 0 && (
+                  <div className="times-readonly">
+                    <label className="label">Scheduled Times</label>
+                    <div className="times-list">
+                      {form.times.map((t, i) => (
+                        <div key={i} className="time-pill">{t}</div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <label className="label">Upload Image (optional)</label>
+                {mode !== "view" && (
+                  <input type="file" accept="image/*" onChange={handleImage} className="input" />
+                )}
+
+                {form.imageUrl && (
+                  <div className="img-preview-small">
+                    <img src={form.imageUrl} alt="medicine" />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="modal-foot">
+              <button className="btn btn-ghost" onClick={() => setShowForm(false)}>Close</button>
+              {mode !== "view" && <button className="btn btn-primary" onClick={handleSave}>Save</button>}
             </div>
           </div>
         </div>
       )}
-
-      <div className="record-list">
-        {records.map((r) => (
-          <div key={r.id} className="record-card">
-            <div>
-              <p className="record-name">{r.name}</p>
-              <p className="record-sub">Dose: {r.dose} time(s)</p>
-              <p className="record-sub">Times: {r.times?.join(", ")}</p>
-            </div>
-
-            <div className="action-buttons">
-              <button
-                onClick={() => handleView(r.id)}
-                className="btn small btn-dark"
-              >
-                View
-              </button>
-              <button
-                onClick={() => handleEdit(r.id)}
-                className="btn small btn-primary"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDelete(r.id)}
-                className="btn small btn-danger"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
