@@ -53,11 +53,13 @@ import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Firebase authentication listener
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
+      setLoading(false);
     });
     return unsubscribe;
   }, []);
@@ -77,7 +79,7 @@ const App = () => {
         <Route
           path="/app/*"
           element={
-            <ProtectedRoute user={user}>
+            <ProtectedRoute user={user} loading={loading}>
               <MainApp />
               
             </ProtectedRoute>

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import QrScanner from "./Images.jsx"; // adjust path if needed
 import "./ScannerPage.css";
 import { LuUpload } from "react-icons/lu";
+import logo from "./images/logo.png"
+import { useNavigate } from "react-router-dom";
 
 const ScannerPage = () => {
   const [responseText, setResponseText] = useState("");
@@ -9,7 +11,12 @@ const ScannerPage = () => {
   const [selectedImagePreview, setSelectedImagePreview] = useState(null);
   const [error, setError] = useState("");
 
+  const [currentTime, setCurrentTime] = useState("");
+const [currentDay, setCurrentDay] = useState("");
+const [currentDate, setCurrentDate] = useState("");
+
   const apiKey = import.meta.env.VITE_API_KEY_GEMINI;
+  const navigate = useNavigate();
 
   // convert file to base64
   const toBase64 = (file) => {
@@ -20,6 +27,43 @@ const ScannerPage = () => {
       reader.onerror = reject;
     });
   };
+
+
+    // Live digital clock
+ React.useEffect(() => {
+  const updateClock = () => {
+    const now = new Date();
+
+    // Digital time
+    const timeString = now.toLocaleTimeString("en-US", {
+      hour12: true,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+
+    // Day name
+    const dayString = now.toLocaleDateString("en-US", {
+      weekday: "long",
+    });
+
+    // Full date (you can format differently if you want)
+    const dateString = now.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
+    setCurrentTime(timeString);
+    setCurrentDay(dayString);
+    setCurrentDate(dateString);
+  };
+
+  updateClock(); // run immediately
+  const interval = setInterval(updateClock, 1000);
+  return () => clearInterval(interval);
+}, []);
+
 
   // handle file selection triggered by the Upload button
   const handleFileChange = async (e) => {
@@ -46,7 +90,7 @@ Please analyze this image and provide detailed information about the medicine in
 Each section should be clearly separated with a heading and followed by bullet points. 
 Use the name of the medicine from the image to guide your answers.
 
-If some information is missing, provide "Not available". End each bullet point with \\n.
+If some information is missing, provide "Not available". End each bullet point with \n.
 
 ---
 
@@ -139,8 +183,10 @@ Do not include extra paragraphs or summaries. Only return the structured bullet 
       <div className="content-card hero">
         <div className="hero-left">
           <div className="brand">
-            <div className="logo">🩺</div>
-            <div className="brand-text">MedCare</div>
+            <div className="logo">
+              <img src={logo} alt="" style={{width:'60px'}}/>
+            </div>
+            <div className="brand-text">Jeevan Jyoti</div>
           </div>
 
           <h1 className="hero-title">Simple<br/>Healthcare Assistant</h1>
@@ -150,7 +196,7 @@ Do not include extra paragraphs or summaries. Only return the structured bullet 
           </p>
 
           <div className="hero-actions">
-            <button className="btn primary">Set Reminder</button>
+            <button className="btn primary" onClick={() => navigate("/app/reminder")}>Set Reminder</button>
 
             {/* Hidden file input */}
             <input
@@ -172,13 +218,23 @@ Do not include extra paragraphs or summaries. Only return the structured bullet 
         </div>
 
         <div className="hero-right">
-          <div className="next-dose-card">
-            <div className="next-dose-label">Next Dose</div>
-            <div className="next-dose-time">Today · 8:00 PM</div>
-            <div className="next-dose-med">Paracetamol 500mg</div>
-            <div className="pill-icon">💊</div>
-          </div>
-        </div>
+  <div className="hero-right">
+  <div className="next-dose-card">
+    <div className="next-dose-time">{currentDay}</div>
+
+    <div className="next-dose-time">
+      Today · {currentTime}
+    </div>
+
+    <div className="next-dose-med">
+      {currentDate}
+    </div>
+
+    <div className="pill-icon">💊</div>
+  </div>
+</div>
+
+</div>
       </div>
 
       {/* Middle Row: Scanner + Preview + Info Cards */}

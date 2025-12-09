@@ -13,6 +13,7 @@ const MainApp = () => {
   const location = useLocation();
 
   const [isOpen, setIsOpen] = useState(false);
+  
 
   const handleLogout = async () => {
     await auth.signOut();

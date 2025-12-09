@@ -29,6 +29,13 @@ body{background:var(--bg);margin:0;}
 .next-med{font-weight:700;}
 .pill-emoji{position:absolute;right:12px;top:12px;font-size:28px;}
 
+
+/* .logo{
+  width: 50px;
+  height: 50px;
+} */
+
+
 .main-grid{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px;}
 .card-list{background:var(--card-bg);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(8,24,48,0.04);}
 .list-header h3{margin:0;}

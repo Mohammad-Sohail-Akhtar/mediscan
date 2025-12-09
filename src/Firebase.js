@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { browserLocalPersistence, getAuth, setPersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -25,3 +25,14 @@ export const auth = getAuth(app);
 
 
 export const db = getFirestore(app);
+
+
+
+// 🔥 Keep login even after refresh
+setPersistence(auth, browserLocalPersistence)
+  .then(() => {
+    console.log("Firebase Auth Persistence set to LOCAL");
+  })
+  .catch((err) => {
+    console.error("Persistence Error:", err);
+  });
